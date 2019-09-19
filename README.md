@@ -1,4 +1,21 @@
+
+
 # Data sorting and filtering
+
+## Solution
+
+For external dependencies I have included the following via Maven:
+
+- Commons.collections: fast, freely available and commonly used tools for sorting the list for records.
+- Gson: fast, simple, free and ubiquitous json parsing and exporting library. Used to read in json records
+- OpenCSV: freely available csv for import/export. This was chosen because it handles edge cases in text that may contain commas or empty values. 
+
+Internal Dependencies
+
+- Jaxb Xml parsing: Simple and ubiquitous for small xml documents. If the files were not so small I would have used stax for memory/speed. With JDK8 the built-in jaxb is much improved over earlier versions. 
+
+
+## Usage
 
 Read the 3 input files reports.json, reports.csv, reports.xml and output a combined CSV file with the following characteristics:
 
@@ -13,3 +30,5 @@ Please provide source, documentation on how to run the program and an explanatio
 ## Submission
 
 You may fork this repo, commit your work and let us know of your project's location, or you may email us your project files in a zip file.
+
+
