@@ -40,6 +40,7 @@ public class EventFilter {
     }
     
     public EventFilter(String[] fileNames) {
+        long startTime = System.currentTimeMillis();
         Set<Entry> entries = new LinkedHashSet<Entry>();
         List<Entry> entriesFiltered = new ArrayList<Entry>();
         for (String fileName:fileNames) {
@@ -47,8 +48,6 @@ public class EventFilter {
             String mimeType = "CSV";
             try {
                 mimeType = Files.probeContentType(path) ==  null ? "CSV" : Files.probeContentType(path);
-               
-                System.out.println("Found "+ fileName + " with mimeType "+ mimeType);
             } catch (IOException e) {
                 System.err.println("Failed to find and extract mime for: " + fileName);
                 e.printStackTrace();
@@ -106,6 +105,7 @@ public class EventFilter {
             System.err.println("Could not open output file for writing " + OUTPUT_FILENAME);
             e.printStackTrace();
         }
+        System.out.println("Total processing time (ms) is: " + (System.currentTimeMillis()-startTime));
         
     }
 
