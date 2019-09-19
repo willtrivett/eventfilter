@@ -17,16 +17,18 @@ Internal Dependencies
 
 ## Package and Build
 
-In the route of the eventfilter project run 'mvn package' or setup an eclipse/intellij maven target for 'package'
+In the root of the eventfilter project run 'mvn package' or setup an eclipse/intellij maven target for 'package'
 
 The resulting package will build all required libraries into {Project.dir}/target/eventfilter-1.0.jar
 
 ## Running EventFilter
 
-The exported java is compliant with jdk8u151 or greater. It can be run via: 
+The exported java jar is compliant with jdk8u151 or greater. It can be run via: 
 java -jar eventfilter-1.0.jar [../reports.csv [../reports.json[ ../reports.xml]]] 
 Any finite number of input files can be handed into the program arguments. The full path or path with respect to the jar file are valid. 
 
+
+## Requirements
 Read the 3 input files reports.json, reports.csv, reports.xml and output a combined CSV file with the following characteristics:
 
 - The same column order and formatting as reports.csv
