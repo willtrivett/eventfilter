@@ -105,6 +105,9 @@ public class EventFilter {
             System.err.println("Could not open output file for writing " + OUTPUT_FILENAME);
             e.printStackTrace();
         }
+        System.out.println("Total number of ingress entries: " + (entries.size()));
+        System.out.println("Total number of egress entries: " + (entriesFiltered.size()));
+
         System.out.println("Total processing time (ms) is: " + (System.currentTimeMillis()-startTime));
         
     }

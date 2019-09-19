@@ -15,7 +15,17 @@ Internal Dependencies
 - Jaxb Xml parsing: Simple and ubiquitous for small xml documents. If the files were not so small I would have used stax for memory/speed. With JDK8 the built-in jaxb is much improved over earlier versions. 
 
 
-## Usage
+## Package and Build
+
+In the route of the eventfilter project run 'mvn package' or setup an eclipse/intellij maven target for 'package'
+
+The resulting package will build all required libraries into {Project.dir}/target/eventfilter-1.0.jar
+
+## Running EventFilter
+
+The exported java is compliant with jdk8u151 or greater. It can be run via: 
+java -jar eventfilter-1.0.jar [../reports.csv [../reports.json[ ../reports.xml]]] 
+Any finite number of input files can be handed into the program arguments. The full path or path with respect to the jar file are valid. 
 
 Read the 3 input files reports.json, reports.csv, reports.xml and output a combined CSV file with the following characteristics:
 
