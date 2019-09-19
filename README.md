@@ -27,6 +27,7 @@ The exported java jar is compliant with jdk8u151 or greater. It can be run via:
 java -jar eventfilter-1.0.jar [../reports.csv [../reports.json[ ../reports.xml]]] 
 Any finite number of input files can be handed into the program arguments. The full path or path with respect to the jar file are valid. 
 
+The output as 'combined.csv' into the current working directory. 
 
 ## Requirements
 Read the 3 input files reports.json, reports.csv, reports.xml and output a combined CSV file with the following characteristics:
