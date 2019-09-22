@@ -128,6 +128,13 @@ public class Entry {
         this.requestDate = requestDate;
     }
     
+    
+    @Override
+    public int hashCode() {
+        //this turned out to be faster than the default hashcode
+        return this.toString().hashCode();
+    }
+    
     @Override
     public String toString() {
         return "["
@@ -138,7 +145,7 @@ public class Entry {
                 + retriesRequest + "|" 
                 + packetsRequested + "|" 
                 + packetsServiced + "|" 
-                + maxHoleSize + "|"
+                + maxHoleSize 
                 + "]"
                 ;
         

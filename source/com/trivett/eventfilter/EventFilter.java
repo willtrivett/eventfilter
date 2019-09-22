@@ -7,11 +7,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import com.opencsv.CSVWriter;
@@ -39,35 +39,41 @@ public class EventFilter {
         new EventFilter(args);
     }
     
+    private void parseFile(Map<Entry,Object> entries, String fileName) {
+        Path path = new File (fileName).toPath();
+        String mimeType = "CSV";
+        try {
+            mimeType = Files.probeContentType(path) ==  null ? "CSV" : Files.probeContentType(path);
+        } catch (IOException e) {
+            System.err.println("Failed to find and extract mime for: " + fileName);
+            e.printStackTrace();
+        }
+        Object blank = new Object();
+        switch (mimeType) {
+        case "application/json":
+            new JSONParser().parseFile(fileName).forEach(entry -> entries.put(entry, blank));            
+            break;
+        case "text/xml":
+            new XMLParser().parseFile(fileName).forEach(entry -> entries.put(entry, blank));
+            break;
+        default: // CSV defaults to null
+            new CSVParser().parseFile(fileName).forEach(entry -> entries.put(entry, blank));
+            break;
+        }
+    }
+    
     public EventFilter(String[] fileNames) {
         long startTime = System.currentTimeMillis();
-        Set<Entry> entries = new LinkedHashSet<Entry>();
+        Map<Entry,Object> entries = new ConcurrentHashMap<Entry,Object>();
         List<Entry> entriesFiltered = new ArrayList<Entry>();
-        for (String fileName:fileNames) {
-            Path path = new File (fileName).toPath();
-            String mimeType = "CSV";
-            try {
-                mimeType = Files.probeContentType(path) ==  null ? "CSV" : Files.probeContentType(path);
-            } catch (IOException e) {
-                System.err.println("Failed to find and extract mime for: " + fileName);
-                e.printStackTrace();
-            }
-            switch (mimeType) {
-            case "application/json":
-                entries.addAll(new JSONParser().parseFile(fileName));
-                break;
-            case "text/xml":
-                entries.addAll(new XMLParser().parseFile(fileName));
-                break;
-            default: // CSV defaults to null
-                entries.addAll(new CSVParser().parseFile(fileName));
-                break;
-            }
-            
-        }
+        //setup parallel processing via parallel stream (simpler than work stealing pool, just to benchmark)
+        List<String> fileNamesList = new ArrayList<String>(fileNames.length);
+        Arrays.stream(fileNames).forEach(x -> fileNamesList.add(x));
+
+        fileNamesList.parallelStream().forEach(xName -> parseFile(entries, xName));
         // parse and generate dates in parallel for speedup.
-        entries.parallelStream().forEach(x -> x.getRequestDate());
-        entriesFiltered = entries.stream().filter(m -> m.getPacketsServiced() != 0).collect(Collectors.toList());
+        entries.keySet().parallelStream().forEach(x -> x.getRequestDate());
+        entriesFiltered = entries.keySet().stream().filter(m -> m.getPacketsServiced() != 0).collect(Collectors.toList());
         Collections.sort(entriesFiltered, Entry.ENTRY_COMPARATOR);
         
         try {
